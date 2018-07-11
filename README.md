@@ -5,8 +5,10 @@ NodeJS wrapper for the Sabre Dev Studio API
 [![Build Status](https://travis-ci.org/SabreDevStudio/sabre-dev-studio-node.svg)](https://travis-ci.org/SabreDevStudio/sabre-dev-studio-node)
 
 ## Getting Started
+
 Install the module with: `npm install sabre-dev-studio`
 
+```javascript
     var SabreDevStudio = require('sabre-dev-studio');
     var sabre_dev_studio = new SabreDevStudio({
       client_id:     'V1:1234:ABCD:XYZ',
@@ -22,27 +24,31 @@ Install the module with: `npm install sabre-dev-studio`
       }
     };
     sabre_dev_studio.get('/v1/lists/supported/shop/themes', options, callback);
+```
 
 ### Options
 
+```javascript
     new SabreDevStudioFlight(options)
+```
 
 `options` - an object containing the following items:
 
-- `client_id` - credentials: client ID provided by Sabre
-- `client_secret` - credentials: client secret provided by sabre
-- `uri` - base URI of the API to use
-- `gzip` - (optional) enables gzip; defaults to `true`
-- `access_token` - (optional) an existing access token to use; will not be renewed unless credentials are supplied
+-   `client_id` - credentials: client ID provided by Sabre
+-   `client_secret` - credentials: client secret provided by sabre
+-   `uri` - base URI of the API to use
+-   `gzip` - (optional) enables gzip; defaults to `true`
+-   `access_token` - (optional) an existing access token to use; will not be renewed unless credentials are supplied
 
 ## Documentation
 
-See http://developer.sabre.com
+See <http://developer.sabre.com>
 
 ## Examples
 
 ### Using the Flight API:
 
+```javascript
     var SabreDevStudioFlight = require('sabre-dev-studio/lib/sabre-dev-studio-flight');
     var sabre_dev_studio_flight = new SabreDevStudioFlight({
       client_id:     'V1:1234:ABCD:XYZ',
@@ -60,11 +66,14 @@ See http://developer.sabre.com
     };
     sabre_dev_studio_flight.travel_theme_lookup(callback);
     sabre_dev_studio_flight.theme_airport_lookup('BEACH', callback);
+```
 
 ## Contributing
+
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## License
+
 Copyright (c) 2014 Sabre Corp
 Licensed under the MIT license.
 
