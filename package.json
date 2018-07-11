@@ -22,24 +22,24 @@
   ],
   "main": "lib/sabre-dev-studio",
   "engines": {
-    "node": ">= 0.8.0"
+    "node": ">= 6.0"
   },
   "scripts": {
     "test": "grunt nodeunit"
   },
   "devDependencies": {
-    "grunt": "~0.4.4",
-    "grunt-contrib-jshint": "~0.6.4",
-    "grunt-contrib-nodeunit": "~0.2.0",
-    "grunt-contrib-watch": "~0.5.3",
-    "moment": "~2.10.3",
+    "grunt": "~1.0.3",
+    "grunt-contrib-jshint": "~1.1.0",
+    "grunt-contrib-nodeunit": "~2.0.0",
+    "grunt-contrib-watch": "~1.1.0",
+    "moment": "~2.22.2",
     "nock": "^7.3.0"
   },
   "dependencies": {
-    "bunyan": "~1.4.0",
-    "request": "^2.69.0",
-    "simple-errors": "~1.0.0",
-    "simple-oauth2": "^0.5.1"
+    "bunyan": "~1.8.12",
+    "request": "^2.87.0",
+    "simple-errors": "~1.0.1",
+    "simple-oauth2": "^1.5.0"
   },
   "keywords": []
 }
