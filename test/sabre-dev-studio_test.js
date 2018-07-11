@@ -33,9 +33,9 @@ nock.disableNetConnect();
 module.exports = {
   setUp: function(callback) {
     this.sabre_dev_studio = new SabreDevStudio({
-      client_id:     'V1:USER:GROUP:DOMAIN',
+      client_id: 'V1:USER:GROUP:DOMAIN',
       client_secret: 'PASSWORD',
-      uri:           'https://api.test.sabre.com'
+      uri: 'https://api.test.sabre.com'
     });
     callback();
   },
@@ -50,62 +50,68 @@ module.exports = {
     var that = this;
     var base_url = "https://api.test.sabre.com";
     var token = 'this_is_a_fake_token';
-    var stub_request = nock(base_url)
+    try {
+      var stub_request = nock(base_url)
         .post('/v2/auth/token', {
           grant_type: 'client_credentials',
           client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
           client_secret: 'UEFTU1dPUkQ='
         })
-        .reply(200, { access_token: token })
-        ;
-    var stub_request_get = nock(base_url)
+        .reply(200, {
+          access_token: token,
+          token_type: "bearer",
+          expires_in: 604800
+        });
+      var stub_request_get = nock(base_url)
         .get('/v1/lists/supported/shop/themes')
-        .replyWithFile(200, __dirname + '/fixtures/air_shopping_themes.json')
-        ;
-    this.sabre_dev_studio.get('/v1/lists/supported/shop/themes', {}, function(error, data) {
-      test.ok(data);
-    });
-    setTimeout(function () {
-      test.ok(stub_request.isDone());
-      test.ok(stub_request_get.isDone());
-      test.equal(that.access_token, that.sabre_dev_studio.access_token);
-      test.done();
-    }, 50);
+        .replyWithFile(200, __dirname + '/fixtures/air_shopping_themes.json');
+      this.sabre_dev_studio.get('/v1/lists/supported/shop/themes', {}, function(error, data) {
+        test.ok(data);
+      });
+      setTimeout(function() {
+        test.ok(stub_request.isDone());
+        test.ok(stub_request_get.isDone());
+        test.equal(that.access_token, that.sabre_dev_studio.access_token);
+        test.done();
+      }, 100);
+    } catch (e) {
+      console.error(e);
+    }
   },
   testBaseAPIHandlesRetry: function(test) {
     var that = this;
     var base_url = "https://api.test.sabre.com";
     var token = 'this_is_a_fake_token';
     var stub_1st_request_auth_token = nock(base_url)
-            .post('/v2/auth/token', {
-              grant_type: 'client_credentials',
-              client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
-              client_secret: 'UEFTU1dPUkQ='
-            })
-            .reply(200, { access_token: token })
-        ;
+      .post('/v2/auth/token', {
+        grant_type: 'client_credentials',
+        client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
+        client_secret: 'UEFTU1dPUkQ='
+      })
+      .reply(200, {
+        access_token: token
+      });
     var stub_2nd_request_auth_token = nock(base_url)
-            .post('/v2/auth/token', {
-              grant_type: 'client_credentials',
-              client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
-              client_secret: 'UEFTU1dPUkQ='
-            })
-            .reply(200, { access_token: token })
-        ;
+      .post('/v2/auth/token', {
+        grant_type: 'client_credentials',
+        client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
+        client_secret: 'UEFTU1dPUkQ='
+      })
+      .reply(200, {
+        access_token: token
+      });
     // simulate that token expired
     var stub_request_get_1st = nock(base_url)
-            .get('/v1/lists/supported/shop/themes')
-            .replyWithFile(401, __dirname + '/fixtures/air_shopping_themes_401_invalid_credentials.json')
-        ;
+      .get('/v1/lists/supported/shop/themes')
+      .replyWithFile(401, __dirname + '/fixtures/air_shopping_themes_401_invalid_credentials.json');
     // and for next request we will have refreshed auth token so service will reply OK
     var stub_request_get_2nd = nock(base_url)
-            .get('/v1/lists/supported/shop/themes')
-            .replyWithFile(200, __dirname + '/fixtures/air_shopping_themes.json')
-        ;
+      .get('/v1/lists/supported/shop/themes')
+      .replyWithFile(200, __dirname + '/fixtures/air_shopping_themes.json');
     this.sabre_dev_studio.get('/v1/lists/supported/shop/themes', {}, function(error, data) {
       test.ok(data);
     });
-    setTimeout(function () {
+    setTimeout(function() {
       test.ok(stub_1st_request_auth_token.isDone());
       test.ok(stub_request_get_1st.isDone());
       test.ok(stub_2nd_request_auth_token.isDone());
@@ -119,37 +125,37 @@ module.exports = {
     var base_url = "https://api.test.sabre.com";
     var token = 'this_is_a_fake_token';
     var stub_1st_request_auth_token = nock(base_url)
-            .post('/v2/auth/token', {
-              grant_type: 'client_credentials',
-              client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
-              client_secret: 'UEFTU1dPUkQ='
-            })
-            .reply(200, { access_token: token })
-        ;
+      .post('/v2/auth/token', {
+        grant_type: 'client_credentials',
+        client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
+        client_secret: 'UEFTU1dPUkQ='
+      })
+      .reply(200, {
+        access_token: token
+      });
     var stub_2nd_request_auth_token = nock(base_url)
-            .post('/v2/auth/token', {
-              grant_type: 'client_credentials',
-              client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
-              client_secret: 'UEFTU1dPUkQ='
-            })
-            .reply(200, { access_token: token })
-        ;
+      .post('/v2/auth/token', {
+        grant_type: 'client_credentials',
+        client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
+        client_secret: 'UEFTU1dPUkQ='
+      })
+      .reply(200, {
+        access_token: token
+      });
     // simulate that token expired
     var stub_request_get_1st = nock(base_url)
-            .get('/v1/lists/supported/shop/themes')
-            .replyWithFile(401, __dirname + '/fixtures/air_shopping_themes_401_invalid_credentials.json')
-        ;
+      .get('/v1/lists/supported/shop/themes')
+      .replyWithFile(401, __dirname + '/fixtures/air_shopping_themes_401_invalid_credentials.json');
     // another token problem
     var stub_request_get_2nd = nock(base_url)
-            .get('/v1/lists/supported/shop/themes')
-            .replyWithFile(401, __dirname + '/fixtures/air_shopping_themes_401_invalid_credentials.json')
-        ;
+      .get('/v1/lists/supported/shop/themes')
+      .replyWithFile(401, __dirname + '/fixtures/air_shopping_themes_401_invalid_credentials.json');
 
     // setting loglevel to fatal, to effectively disable all logging, as this test checks error conditions which are logged.
     var sabre_dev_studio = new SabreDevStudio({
-      client_id:     'V1:USER:GROUP:DOMAIN',
+      client_id: 'V1:USER:GROUP:DOMAIN',
       client_secret: 'PASSWORD',
-      uri:           'https://api.test.sabre.com',
+      uri: 'https://api.test.sabre.com',
       loglevel: 'fatal'
     });
 
@@ -160,7 +166,7 @@ module.exports = {
       test.ok(error);
     }, MAX_RETRIES);
 
-    setTimeout(function () {
+    setTimeout(function() {
       test.ok(stub_1st_request_auth_token.isDone());
       test.ok(stub_request_get_1st.isDone());
       test.ok(stub_2nd_request_auth_token.isDone());
@@ -172,52 +178,51 @@ module.exports = {
   testNoMoreHttpCallsAfterFetchingAuthTokenFailed: function(test) {
     var base_url = "https://api.test.sabre.com";
     var stub_request_auth_token = nock(base_url)
-        .post('/v2/auth/token', {
-            grant_type: 'client_credentials',
-            client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
-            client_secret: 'UEFTU1dPUkQ='
-          })
-        .reply(401, '{"error":"invalid_client","error_description":"Credentials are missing or the syntax is not correct"}')
-        ;
+      .post('/v2/auth/token', {
+        grant_type: 'client_credentials',
+        client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
+        client_secret: 'UEFTU1dPUkQ='
+      })
+      .reply(401, '{"error":"invalid_client","error_description":"Credentials are missing or the syntax is not correct"}');
     // setting loglevel to fatal, to effectively disable all logging, as this test checks error conditions which are logged.
     var sabre_dev_studio = new SabreDevStudio({
-      client_id:     'V1:USER:GROUP:DOMAIN',
+      client_id: 'V1:USER:GROUP:DOMAIN',
       client_secret: 'PASSWORD',
-      uri:           'https://api.test.sabre.com',
+      uri: 'https://api.test.sabre.com',
       loglevel: 'fatal'
     });
 
     sabre_dev_studio.get('/v1/lists/supported/shop/themes', {}, null);
 
-    setTimeout(function () {
+    setTimeout(function() {
       test.ok(stub_request_auth_token.isDone());
       test.done();
     }, 50);
   },
-  testSupportsGzipCompression: function (test) {
+  testSupportsGzipCompression: function(test) {
     var that = this;
     var base_url = "https://api.test.sabre.com";
     var token = 'this_is_a_fake_token';
     var stub_request = nock(base_url)
-        .post('/v2/auth/token', {
-            grant_type: 'client_credentials',
-            client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
-            client_secret: 'UEFTU1dPUkQ='
-          })
-        .reply(200, { access_token: token })
-        ;
+      .post('/v2/auth/token', {
+        grant_type: 'client_credentials',
+        client_id: 'VjE6VVNFUjpHUk9VUDpET01BSU4=',
+        client_secret: 'UEFTU1dPUkQ='
+      })
+      .reply(200, {
+        access_token: token
+      });
     var stub_request_get = nock(base_url, {
-          reqheaders: {
-            'Accept-Encoding': function (value) {
-              return value.match(/,?\s*gzip\s*\,?/i);
-            }
+        reqheaders: {
+          'Accept-Encoding': function(value) {
+            return value.match(/,?\s*gzip\s*\,?/i);
           }
-        })
-        .get('/v1/lists/supported/shop/themes')
-        .replyWithFile(200, __dirname + '/fixtures/air_shopping_themes.json.gz', {
-          'Content-Encoding': 'gzip'
-        })
-        ;
+        }
+      })
+      .get('/v1/lists/supported/shop/themes')
+      .replyWithFile(200, __dirname + '/fixtures/air_shopping_themes.json.gz', {
+        'Content-Encoding': 'gzip'
+      });
     this.sabre_dev_studio.get('/v1/lists/supported/shop/themes', {}, function(error, data) {
       test.ok(data);
 
