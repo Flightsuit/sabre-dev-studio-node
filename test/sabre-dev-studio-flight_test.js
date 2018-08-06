@@ -130,7 +130,7 @@ module.exports = {
       'Content-Type': 'application/json'
     };
     var stub_request_post = nock(this.base_url)
-      .post('/v1.8.5/shop/flights?' + qs.stringify(options))
+      .post('/v4.1.0/shop/flights?' + qs.stringify(options))
       .replyWithFile(200, __dirname + '/fixtures/bargain_finder_max.json');
     this.sabre_dev_studio_flight.bargain_finder_max('', function(error, data) {
       test.ok(data);
@@ -149,7 +149,7 @@ module.exports = {
       'Content-Type': 'application/json'
     };
     var stub_request_post = nock(this.base_url)
-      .post('/v1.8.5/shop/flights?' + qs.stringify(options))
+      .post('/v4.1.0/shop/flights?' + qs.stringify(options))
       .replyWithFile(200, __dirname + '/fixtures/bargain_finder_max_error.json');
     this.sabre_dev_studio_flight.bargain_finder_max('', function(error, data) {
       test.ok(data);
